@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!-- name of the service and the namespace -->
+<definitions name="EmployeeService"
+             targetNamespace="http://example.com/employee"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:tns="http://example.com/employee"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <!-- what need to be sent in the request -->
+  <message name="getEmployeeRequest">
+    <part name="id" type="xsd:string"/>
+  </message>
+  <!-- Response -->
+  <message name="getEmployeeResponse">
+    <part name="id" type="xsd:string"/>
+    <part name="name" type="xsd:string"/>
+    <part name="role" type="xsd:string"/>
+  </message>
+  <!-- What operation exists: get, return-->
+  <portType name="EmployeePortType">
+    <operation name="getEmployee">
+      <input message="tns:getEmployeeRequest"/>
+      <output message="tns:getEmployeeResponse"/>
+    </operation>
+  </portType>
+ <!-- how comunicates SOAP protocol (remote procedure call) style, transport HTTP-->
+  <binding name="EmployeeBinding" type="tns:EmployeePortType">
+    <soap:binding style="rpc"
+                  transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="getEmployee">
+      <soap:operation soapAction="getEmployee"/>
+      <input>
+        <soap:body use="encoded"
+                   namespace="urn:EmployeeService"
+                   encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="encoded"
+                   namespace="urn:EmployeeService"
+                   encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+  </binding>
+ <!-- where is the service-->
+  <service name="EmployeeService">
+    <port name="EmployeePort"
+          binding="tns:EmployeeBinding">
+      <soap:address location="http://localhost:8000/employee"/>
+    </port>
+  </service>
+</definitions>

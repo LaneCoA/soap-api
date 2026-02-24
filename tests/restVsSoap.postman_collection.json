@@ -1,0 +1,240 @@
+{
+  "info": {
+    "_postman_id": "ffc23a9a-325d-4e94-bb5e-556f00e2919b",
+    "name": "API rest vs SOAP API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51396763",
+    "_collection_link": "https://go.postman.co/collection/51396763-ffc23a9a-325d-4e94-bb5e-556f00e2919b?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Api request",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response contains id and all fields\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property(\"id\");",
+              "    pm.expect(jsonData).to.have.property(\"name\");",
+              "    pm.expect(jsonData).to.have.property(\"role\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}employee/1",
+          "host": [
+            "{{url}}employee"
+          ],
+          "path": [
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Api sad path",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 404\", function () {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "pm.test(\"Response contains error message\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property(\"error\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/employee/999",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "employee",
+            "999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "soap request",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseText = pm.response.text(); // Get the response body as a string   ",
+              "pm.test(\"Status is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Contains SOAP Envelope\", function () {",
+              "    pm.expect(responseText).to.include(\"Envelope\");",
+              "});",
+              "",
+              "pm.test(\"Contains expected node\", function () {",
+              "    pm.expect(responseText).to.include(\"getEmployeeResponse\");",
+              "});",
+              "",
+              "pm.test(\"Contains all fields\", function () {",
+              "    pm.expect(responseText).to.include(\"id\");",
+              "    pm.expect(responseText).to.include(\"name\");",
+              "    pm.expect(responseText).to.include(\"role\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n                  xmlns:urn=\"urn:EmployeeService\">\n   <soapenv:Header/>\n   <soapenv:Body>\n      <urn:getEmployee>\n         <id>1</id>\n      </urn:getEmployee>\n   </soapenv:Body>\n</soapenv:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/employee",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "employee"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "soap sad path",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const responseText = pm.response.text(); // Get the response body as a string   ",
+              "pm.test(\"Status is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Contains SOAP Envelope\", function () {",
+              "    pm.expect(responseText).to.include(\"Envelope\");",
+              "});",
+              "",
+              "pm.test(\"Contains expected fault\", function () {",
+              "    pm.expect(responseText).to.include(\"faultcode\");",
+              "});",
+              "",
+              "pm.test(\"Contains error message\", function () {",
+              "    pm.expect(responseText).to.include(\"Employee not found\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n                  xmlns:urn=\"urn:EmployeeService\">\n   <soapenv:Header/>\n   <soapenv:Body>\n      <urn:getEmployee>\n         <id>999</id>\n      </urn:getEmployee>\n   </soapenv:Body>\n</soapenv:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/employee",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "employee"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
