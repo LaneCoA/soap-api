@@ -1,6 +1,6 @@
-# Retail API REST
+# Retail SOAP API
 
-API REST desarrollada en Node.js para pruebas de API rest
+SOAP API desarrollada en Node.js para pruebas de SOAP API
 
 ## 🚀 Tecnologías
 
